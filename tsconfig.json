@@ -1,0 +1,4 @@
+{
+  "extends": "./node_modules/neemata/templates/tsconfig.json",
+  "include": [".neemata/types/**/*.d.ts", "types/**/*.ts", "application/**/*"]
+}

@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "./node_modules/neemata/templates/eslint.json"
+  ],
+  "ignorePatterns": ["server.js"],
+  "rules": {
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "no-extra-semi": "off",
+    "no-unused-vars": "warn",
+    "max-len": [
+      "warn",
+      {
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true
+      }
+    ],
+    "no-empty": "warn",
+    "operator-linebreak": "off"
+  }
+}
