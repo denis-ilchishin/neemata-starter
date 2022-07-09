@@ -11,5 +11,7 @@ Neemata starter project
 Now you have access to global object `neemata`, and you should be able to run `await neemata.api.testPublic()` 
 which will run `application/api/testPublic.js` api endpoint. 
 
-Also, all changed/added/deleted API endpoints will be instantly reloaded, and you will see changes in `neemata.api.*` properties.
+Run `neemata.setAuth('some token')` to authenticate and `neemata.reconnect()` to reestablish connection with new auth credentials. After `await neemata.api.test()` to access private endpoints
+
+Also, all changed/added/deleted API endpoints will be instantly reloaded, and you will see changes in `neemata.api` object.
 
