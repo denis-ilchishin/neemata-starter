@@ -1,15 +1,8 @@
-import { Knex } from 'knex'
-import 'neemata'
+import '../.neemata/types'
 
-declare global {
-  interface Neemata {
-    auth: {
-      id: number
-      group: string
-    }
-  }
-
-  interface Db {
-    knex: Knex
+declare module 'neemata' {
+  export interface Auth {
+    id: number
+    group: string
   }
 }

@@ -6,7 +6,7 @@ module.exports = {
    * @returns {Promise<string>} Token
    */
   async withPassword(email, password) {
-    // db.knex.select('*').from('users').where()
+    // db.knex.select('*').from('users').where(email = ${email}).andWhere(password = ${passwordHash})
     return this.authorize()
   },
   /**

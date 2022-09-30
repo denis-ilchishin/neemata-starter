@@ -1,6 +1,6 @@
 {
   "name": "neemata-starter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Neemata starter",
   "main": "server.js",
   "scripts": {
@@ -12,10 +12,10 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.0.1",
-    "joi": "^17.6.0",
     "knex": "^2.1.0",
     "neemata": "github:denis-ilchishin/neemata",
-    "sqlite3": "^5.0.8"
+    "sqlite3": "^5.0.8",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "eslint": "^8.18.0",

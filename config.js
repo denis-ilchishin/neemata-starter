@@ -1,11 +1,9 @@
 module.exports = {
-  ports: [9000],
+  ports: [10000, 10001],
+  workers: 3,
   server: {
     hostname: '0.0.0.0',
     cors: '*',
-  },
-  redis: {
-    url: `${process.env.REDIS_PROTOCOL}://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
   },
   auth: {
     lib: 'auth.api',

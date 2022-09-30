@@ -1,15 +1,20 @@
-const { knex } = require('knex')
+const { knex: Knex } = require('knex')
 
-module.exports = defineDbModule({
-  startup: async () => {
-    return knex({
-      client: 'sqlite3',
-      connection: {
-        filename: config.db.filename,
-      },
-    })
-  },
-  shutdown: async (knex) => {
-    await knex.destroy()
+const knex = Knex({
+  client: 'sqlite3',
+  connection: {
+    filename: config.db.filename,
   },
 })
+
+module.startup = async () => {
+  console.log('loading knex')
+  await new Promise((r) => setTimeout(r, 1000))
+  // e.g await redis.connect() or await pg.connect() etc.
+}
+
+module.shutdown = async () => {
+  // e.g await db.destroy() or await db.disconnect() etc.
+}
+
+module.exports = knex
