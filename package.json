@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "knex": "^2.1.0",
-    "neemata": "file:../neemata",
+    "neemata": "github:denis-ilchishin/neemata#bd6df5e55a10588291dc398aa5c68dc963a496ec",
     "sqlite3": "^5.0.8"
   },
   "devDependencies": {
