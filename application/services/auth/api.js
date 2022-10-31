@@ -1,14 +1,14 @@
-// module.hooks.connect = defineConnectionHook(async (...args) => {
-//   console.log('Client connected', ...args)
-// })
+module.hooks.connect = async (...args) => {
+  // console.log('Client connected', ...args)
+}
 
-// module.hooks.disconnect = defineConnectionHook(async (...args) => {
-//   console.log('Client disconnected', ...args)
-// })
+module.hooks.disconnect = async (...args) => {
+  // console.log('Client disconnected', ...args)
+}
 
-// module.hooks.request = defineConnectionHook(async (...args) => {
-//   console.log('Client request', ...args)
-// })
+module.hooks.request = async (...args) => {
+  // console.log('Client request', ...args)
+}
 
 module.exports = defineAuthModule(async (auth) => {
   // Some authentication workflow here
