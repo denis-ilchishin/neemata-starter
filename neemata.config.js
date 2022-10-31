@@ -1,21 +1,19 @@
 module.exports = {
   ports: [10000, 10001],
-  workers: 3,
-  server: {
-    hostname: '0.0.0.0',
-    cors: '*',
-  },
-  auth: {
-    lib: 'auth.api',
-  },
+  workers: 1,
+  log: { level: 'debug' },
   scheduler: {
     tasks: [
       {
         name: 'test',
         cron: '* * * * *',
         task: 'test',
-        args: ['scheduled', 'task'],
+        timeout: 15000,
+        args: ['scheduled', { task: 'args' }],
       },
     ],
+  },
+  intervals: {
+    ping: 10000,
   },
 }

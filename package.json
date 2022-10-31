@@ -1,24 +1,22 @@
 {
   "name": "neemata-starter",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "Neemata starter",
-  "main": "server.js",
   "scripts": {
-    "start": "NODE_ENV=production node server.js",
-    "dev": "NODE_ENV=development node server.js",
+    "start": "neemata prod",
+    "dev": "neemata dev",
+    "task": "neemata task",
     "playground": "serve ."
   },
   "author": "ilchishin.denis@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.0.1",
     "knex": "^2.1.0",
-    "neemata": "github:denis-ilchishin/neemata",
-    "sqlite3": "^5.0.8",
-    "zod": "^3.19.1"
+    "neemata": "file:../neemata",
+    "sqlite3": "^5.0.8"
   },
   "devDependencies": {
     "eslint": "^8.18.0",
-    "serve": "^13.0.2"
+    "serve": "^14.0.1"
   }
 }

@@ -2,6 +2,7 @@ const { knex: Knex } = require('knex')
 
 const knex = Knex({
   client: 'sqlite3',
+  useNullAsDefault: true,
   connection: {
     filename: config.db.filename,
   },
