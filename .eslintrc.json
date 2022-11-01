@@ -4,6 +4,10 @@
     "./node_modules/neemata/templates/eslint.json"
   ],
   "ignorePatterns": ["server.js"],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  },
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "linebreak-style": ["error", "unix"],
