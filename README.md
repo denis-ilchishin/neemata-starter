@@ -13,9 +13,22 @@ Neemata starter project
 Now you have access to global object `neemata`, and you should be able to execute `await neemata.api.testPublic()`
 which will run `application/api/testPublic.js` api endpoint.
 
-Run `neemata.setAuth('some-token'); neemata.reconnect()` to authenticate and reestablish connection with new auth credentials.
+To authenticate and reestablish connection with new auth credentials
+```javascript
+neemata.setAuth('some-token')
+await neemata.reconnect()
+```
 
-After `await neemata.api.test` to access private endpoint at `application/api/test.js` or `await neemata.api.test.v2({ some:'login' })` for `application/api/test.2.js`
+Now you will be able to access private endpoints like `application/api/test.js`
+```javascript
+await neemata.api.test()
+// or to access application/api/test.2.js
+await neemata.api.test.v2({ some:'login' })
+```
 
 Versioning could be nested, e.g `application/api/nested.1` example results in `/nested/test (VER 1)` and `/nested/test (VER 1.2)`
-Run `await neemata.api.nested.test({ some: ['data'] })` to access endpoint `application/api/nested.1/test.js`, or `await neemata.api.nested.test.v1_2({ some: ['data'] })` to access endpoint `application/api/nested.1/test.2.js`
+```javascript
+await neemata.api.nested.test({ some: ['data'] })
+// Or
+await neemata.api.nested.test['v1.2']({ some: ['data'] })
+```
