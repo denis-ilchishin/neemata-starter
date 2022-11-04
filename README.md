@@ -27,12 +27,8 @@ await neemata.api.test.v2({ some:'login' })
 ```
 
 Versioning could be nested, e.g `application/api/nested.1` example results in `/nested/test (VER 1)` and `/nested/test (VER 1.2)`
-
-To access endpoint `application/api/nested.1/test.js`
 ```javascript
 await neemata.api.nested.test({ some: ['data'] })
-```
-Or to access endpoint `application/api/nested.1/test.2.js`
-```javascript
+// Or
 await neemata.api.nested.test['v1.2']({ some: ['data'] })
 ```
