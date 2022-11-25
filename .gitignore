@@ -1,5 +1,6 @@
 .neemata
 package-lock.json
+pnpm-lock.yaml
 
 .DS_Store
 

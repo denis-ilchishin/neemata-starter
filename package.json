@@ -1,22 +1,23 @@
 {
-  "name": "neemata-starter",
-  "version": "0.0.1",
-  "description": "Neemata starter",
+  "private": true,
   "scripts": {
     "start": "neemata prod",
     "dev": "neemata dev",
     "task": "neemata task",
-    "playground": "serve ."
+    "playground": "(cd playground && vite)"
   },
   "author": "ilchishin.denis@gmail.com",
   "license": "MIT",
   "dependencies": {
+    "@neemata/cli": "0.0.2",
+    "@neemata/client": "0.0.2",
+    "@neemata/core": "0.0.2",
     "knex": "^2.1.0",
-    "neemata": "github:denis-ilchishin/neemata",
     "sqlite3": "^5.0.8"
   },
   "devDependencies": {
     "eslint": "^8.18.0",
-    "serve": "^14.0.1"
+    "serve": "^14.0.1",
+    "vite": "^3.2.4"
   }
 }
