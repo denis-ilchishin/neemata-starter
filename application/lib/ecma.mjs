@@ -1,7 +1,4 @@
-export const b = 'b'
+// An example of ecmascript module
 
-hooks.startup = async () => {
-  console.log('hook called from ecma script module (.mjs extenstion)')
-}
-
-export default { a: 'a' }
+export const ecma = 'script'
+export default { is: 'our love' }

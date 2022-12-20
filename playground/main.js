@@ -1,3 +1,5 @@
+///<reference types="vite/client" />
+
 import { Neemata } from '@neemata/client'
 
 const neemata = new Neemata({

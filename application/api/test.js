@@ -5,9 +5,10 @@ module.exports = defineApiModule({
     b: lib.zod.string().optional(),
     c: lib.zod.array(lib.zod.boolean()),
   }),
+  transport: 'ws',
   introspectable: services.auth.guards.admin,
   guards: [services.auth.guards.admin],
-  handler: ({ data, auth }) => {
+  handler: ({ data, auth, client }) => {
     return data
   },
 })

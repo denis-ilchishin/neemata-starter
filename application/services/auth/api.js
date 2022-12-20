@@ -1,12 +1,12 @@
-module.hooks.connect = async (...args) => {
+hooks.connect = async (...args) => {
   // console.log('Client connected', ...args)
 }
 
-module.hooks.disconnect = async (...args) => {
+hooks.disconnect = async (...args) => {
   // console.log('Client disconnected', ...args)
 }
 
-module.hooks.request = async (...args) => {
+hooks.request = async (opts) => {
   // console.log('Client request', ...args)
 }
 

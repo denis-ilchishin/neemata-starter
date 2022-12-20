@@ -1,3 +1,6 @@
+/**
+ * @type {import('@neemata/core/types/internal').NeemataConfig}
+ */
 module.exports = {
   ports: [10000, 10001],
   workers: 1,
@@ -14,6 +17,6 @@ module.exports = {
     ],
   },
   intervals: {
-    ping: 10000,
+    ping: 60000,
   },
 }
