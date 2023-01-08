@@ -1,4 +1,4 @@
-import '../.neemata/types'
+import '../.neemata'
 
 declare module '@neemata/core/types' {
   // Custom Auth types

@@ -1,3 +1,6 @@
-module.exports = defineApiModule(async () => {
-  return 'simple endpoint'
+module.exports = defineApiModule({
+  auth: false,
+  handler: async () => {
+    return 'simple endpoint'
+  },
 })
