@@ -1,8 +1,8 @@
-const { randomBytes, createHash } = require('crypto')
+import { createHash, randomBytes } from 'node:crypto'
 
-module.exports = {
+export default {
   generate: () => {
-    const randomBuffer = randomBytes(512)
+    const randomBuffer = randomBytes(64)
     const hasher = createHash('sha1')
     hasher.update(randomBuffer)
     return hasher.digest('hex')

@@ -1,4 +1,4 @@
-const { knex: Knex } = require('knex')
+import Knex from 'knex'
 
 const knex = Knex({
   client: 'sqlite3',
@@ -8,14 +8,13 @@ const knex = Knex({
   },
 })
 
-module.startup = async () => {
-  console.log('loading knex')
+hooks.startup = async () => {
   await new Promise((r) => setTimeout(r, 1000))
   // e.g await redis.connect() or await pg.connect() etc.
 }
 
-module.shutdown = async () => {
+hooks.shutdown = async () => {
   // e.g await db.destroy() or await db.disconnect() etc.
 }
 
-module.exports = knex
+export default knex
