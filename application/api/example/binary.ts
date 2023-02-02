@@ -5,7 +5,7 @@ export default defineApiModule({
   auth: false,
   schema: Typebox.Type.Object({
     info: Typebox.Type.String(),
-    file: lib.schemas.StreamType({ maximum: 10 * 1024 * 1024 }),
+    file: lib.schemas.StreamType({ maximum: 100 * 1024 * 1024 }),
   }),
   handler: async ({ data, client }) => {
     const { info, file } = data
@@ -22,7 +22,7 @@ export default defineApiModule({
     })
 
     return `Simple endpoint with binary file upload.
-    Validated against custom schema with maximum file size of 10MB.
+    Validated against custom schema with maximum file size of 100MB.
     File is saved to tmp folder.
     File starts steaming only after async operation is done.
     Notification is sent to client after file is saved, if the call was made via ws transport`
