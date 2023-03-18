@@ -1,3 +1,5 @@
 export default {
-  filename: ':memory:',
+  connection: {
+    filename: ':memory:',
+  },
 }

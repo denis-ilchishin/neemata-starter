@@ -3,18 +3,20 @@ import Knex from 'knex'
 const knex = Knex({
   client: 'sqlite3',
   useNullAsDefault: true,
-  connection: {
-    filename: config.db.filename,
-  },
+  connection: config.db.connection,
 })
 
 hooks.startup = async () => {
-  await new Promise((r) => setTimeout(r, 1000))
   // e.g await redis.connect() or await pg.connect() etc.
+  // await knex.raw(
+  //   'CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, group TEXT)'
+  // )
+  // await knex('users').insert({ id: 1, group: 'ADMIN' })
 }
 
 hooks.shutdown = async () => {
   // e.g await db.destroy() or await db.disconnect() etc.
+  await knex.destroy()
 }
 
 export default knex

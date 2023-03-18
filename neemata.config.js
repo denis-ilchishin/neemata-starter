@@ -4,6 +4,9 @@
 module.exports = {
   ports: [10000, 10001],
   workers: 1,
+  api: {
+    schema: 'typebox',
+  },
   log: { level: 'debug' },
   scheduler: {
     tasks: [

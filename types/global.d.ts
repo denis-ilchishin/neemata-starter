@@ -1,9 +1,11 @@
 import '../.neemata'
 
-declare module '@neemata/core/types' {
+declare module '@neemata/core/types/external' {
   // Custom Auth types
   export interface Auth {
-    id: number
-    group: string
+    user: {
+      id: number
+      group: string
+    }
   }
 }

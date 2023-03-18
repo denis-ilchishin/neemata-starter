@@ -1,5 +1,9 @@
+interface SomeType {
+  email: string
+  password: string
+}
+
 async function withPassword(email, password) {
-  // f.e db.knex.select('*').from('users').where(email = ${email}).andWhere(password = ${passwordHash})
   const userId = 1
   return authorize(userId)
 }

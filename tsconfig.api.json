@@ -1,0 +1,8 @@
+{
+  "extends": "./.neemata/tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": true,
+    "outDir": ".neemata/api"
+  },
+  "include": ["types/global.d.ts", "application/api"]
+}

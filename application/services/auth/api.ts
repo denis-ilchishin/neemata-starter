@@ -1,18 +1,17 @@
-hooks.connect = async (...args) => {
-  console.log('Client connected', ...args)
+hooks.connect = async ({ client, req }) => {
+  console.log('Client connected')
 }
 
-hooks.disconnect = async (...args) => {
-  console.log('Client disconnected', ...args)
+hooks.disconnect = async ({ client, req }) => {
+  console.log('Client disconnected')
 }
 
-hooks.call = async (opts) => {
-  console.log('Client call', opts)
+hooks.call = async ({ client, procedure, req, data }) => {
+  console.log('Client call')
 }
 
-export default defineAuthModule(async (auth) => {
+export default defineAuthService(async ({ req, session }) => {
   // Some authentication workflow here
-  // console.dir('authentication: ' + auth)
   // e.g db.knex.select('user').where('token', auth) or jwt.parse(auth)
-  return auth ? { id: 1, group: 'ADMIN' } : null
+  return { user: { id: 1, group: 'ADMIN' } }
 })
