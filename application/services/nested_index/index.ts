@@ -1,4 +1,6 @@
+await dependency('services.example')
+
 export default {
   nested: 'index',
-  dependency: () => services.example.doSome3(),
+  dependency: services.example.doSome3(),
 }

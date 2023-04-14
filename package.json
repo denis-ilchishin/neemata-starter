@@ -9,10 +9,10 @@
   "author": "ilchishin.denis@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "@neemata/cli": "file:../neemata/packages/cli/neemata-cli.tgz",
-    "@neemata/client": "file:../neemata/packages/client/neemata-client.tgz",
-    "@neemata/common": "file:../neemata/packages/common/neemata-common.tgz",
-    "@neemata/core": "file:../neemata/packages/core/neemata-core.tgz",
+    "@neemata/cli": "0.6.0",
+    "@neemata/client": "0.6.0",
+    "@neemata/common": "0.6.0",
+    "@neemata/core": "0.6.0",
     "knex": "^2.1.0",
     "sqlite3": "^5.1.4"
   },

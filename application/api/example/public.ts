@@ -1,10 +1,13 @@
+import { Transport } from '@neemata/common'
+
 export default defineProcedure({
   auth: false,
   handler: async ({ client }) => {
+    await new Promise((resolve) => setTimeout(resolve, 10000))
     application
       .invoke('example.nested.task', { c: 1, b: ['2', '3'] })
       .then((result) => {
-        if (client.transport === 'ws')
+        if (client.transport === Transport.Ws)
           client.send('example_nestedTask_comletion', result)
       })
 

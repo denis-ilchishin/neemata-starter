@@ -1,4 +1,6 @@
-async function doSome() {}
+async function doSome() {
+  return { output: 'output' }
+}
 
 async function doSome2() {}
 

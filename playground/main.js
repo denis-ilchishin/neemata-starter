@@ -4,6 +4,7 @@ import { Neemata } from '@neemata/client'
 
 const neemata = new Neemata({
   host: 'http://localhost:' + prompt('port', 10000),
+  scaffold: true,
 })
 await neemata.connect()
 
