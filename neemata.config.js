@@ -2,11 +2,12 @@
  * @type {import('@neemata/core/types/internal').NeemataConfig}
  */
 module.exports = {
-  ports: [10000, 10001],
+  ports: [10000],
   workers: 1,
   api: {
-    schema: 'typebox',
+    schema: 'zod',
   },
+
   log: { level: 'debug' },
   scheduler: {
     tasks: [

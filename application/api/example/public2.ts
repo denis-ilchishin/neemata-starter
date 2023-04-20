@@ -4,9 +4,14 @@ import Zod from 'zod'
 export default publicProcedure({
   auth: false,
   factory: () => ({
-    input: Zod.string(),
+    input: Zod.number(),
     handler: async ({ data }) => {
-      return data.charAt(0)
+      return {
+        data,
+      }
     },
+    // output: Zod.object({
+    //   b: Zod.string(),
+    // }),
   }),
 })
