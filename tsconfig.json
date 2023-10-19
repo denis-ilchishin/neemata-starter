@@ -1,3 +1,18 @@
 {
-  "extends": "./.neemata/tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "target": "ESNext",
+    "noImplicitAny": false,
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "jsx": "preserve",
+    "strictNullChecks": true,
+    "allowImportingTsExtensions": true,
+    "types": ["@neemata/server/types"]
+  }
 }
