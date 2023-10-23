@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "task": "./node_modules/.bin/neemata task some-task",
     "server": "neemata-watch server",
     "client": "(cd playground && vite)"
   },
@@ -8,10 +9,10 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@neemata/cli": "1.0.27",
-    "@neemata/client": "1.0.27",
-    "@neemata/common": "1.0.27",
-    "@neemata/server": "1.0.27",
+    "@neemata/cli": "1.0.29",
+    "@neemata/client": "1.0.29",
+    "@neemata/common": "1.0.29",
+    "@neemata/server": "1.0.29",
     "@prisma/client": "^5.4.2",
     "better-sqlite3": "^8.6.0",
     "cookie": "^0.5.0",

@@ -14,5 +14,6 @@
     "strictNullChecks": true,
     "allowImportingTsExtensions": true,
     "types": ["@neemata/server/types"]
-  }
+  },
+  "exclude": ["./simple-bench.mjs"]
 }
