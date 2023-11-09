@@ -1,4 +1,4 @@
-import { Client } from '@neemata/client'
+import { Client } from '@neemata/client-uws'
 import { createApp, defineComponent, ref } from 'vue'
 import './styles.css'
 
@@ -11,6 +11,9 @@ const App = defineComponent({
 
     client.connect()
 
+    /**
+     * @type {import('vue').Ref<import('@neemata/client-uws').Stream>}
+     */
     const stream = ref()
     const isStarted = ref(false)
     const isPaused = ref(true)
@@ -37,7 +40,7 @@ const App = defineComponent({
       })
       const data = { file: stream.value }
       client.once('finished', () => (isFinished.value = true))
-      await client.rpc('upload', data)
+      await client.rpc('v1/upload', data)
     }
 
     const createStream = (event) => {
@@ -59,12 +62,12 @@ const App = defineComponent({
     const join = async () => {
       client.off(event, onMessage)
       client.on(event, onMessage)
-      await client.rpc('room/join', { roomId: 'chat' })
+      await client.rpc('v1/room/join', { roomId: 'chat' })
       joined.value = true
     }
 
     const leave = async () => {
-      await client.rpc('room/leave', { roomId: 'chat' })
+      await client.rpc('v1/room/leave', { roomId: 'chat' })
       client.off(event, onMessage)
       joined.value = false
       messages.value = []
@@ -73,14 +76,14 @@ const App = defineComponent({
     const sendMessage = async () => {
       const message = messageText.value
       messageText.value = ''
-      await client.rpc('room/message', {
+      await client.rpc('v1/room/message', {
         roomId: 'chat',
         message,
       })
     }
 
     const httpRpc = async () => {
-      const res = await client.rpc('http-only', undefined, { useHttp: true })
+      const res = await client.rpc('v1/http-only', undefined, { useHttp: true })
       alert(res)
     }
 
@@ -191,7 +194,6 @@ const App = defineComponent({
   },
 })
 
-// console.log(App.toString())
 export const app = createApp(App)
 
 app.mount(document.querySelector('#app'))

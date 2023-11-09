@@ -12,8 +12,8 @@ npm run server
 npm run client # small dem
 ```
 
-There's quick benchmark that you can run using Bun, or install polyfil for Web API Websocket to run using Node
+Run the `test` task
 
 ```Bash
-bun simple-bench.mjs
+npm run task test
 ```

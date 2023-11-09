@@ -1,10 +1,10 @@
-import { defineProvider } from '@neemata/server'
 import { createHash, randomBytes } from 'node:crypto'
+import application from '../application.ts'
 
 const algorithm = 'md5'
 const encoding = 'hex'
 
-export default defineProvider(() => {
+export const cryptoProvider = application.container.declareProvider(() => {
   function hash(input: string) {
     return createHash(algorithm).update(input).digest(encoding)
   }

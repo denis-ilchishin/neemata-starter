@@ -1,27 +1,31 @@
 {
   "private": true,
   "scripts": {
-    "task": "./node_modules/.bin/neemata task some-task",
-    "server": "./node_modules/.bin/neemata-watch server",
+    "task": "./node_modules/.bin/neemata-command --applicationPath=./application/application.ts tasks:run",
+    "server": "./node_modules/.bin/neemata-watch --applicationPath=./application/application.ts",
     "client": "(cd playground && vite)"
   },
   "author": "ilchishin.denis@gmail.com",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@neemata/cli": "1.0.30",
-    "@neemata/client": "1.0.30",
-    "@neemata/common": "1.0.30",
-    "@neemata/server": "1.0.30",
+    "@neemata/cli": "1.0.34",
+    "@neemata/client-uws": "1.0.34",
+    "@neemata/adapter-uws": "1.0.34",
+    "@neemata/extensions": "1.0.34",
+    "@neemata/common": "1.0.34",
+    "@neemata/application": "1.0.34",
     "@prisma/client": "^5.4.2",
     "better-sqlite3": "^8.6.0",
     "cookie": "^0.5.0",
     "knex": "^2.1.0",
     "prisma": "^5.4.2",
     "sqlite3": "^5.1.4",
+    "tsx": "^3.13.0",
     "undici": "^5.25.1",
     "vue": "^3.3.4",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod-to-json-schema": "^3.21.4"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.5",
@@ -31,6 +35,7 @@
     "@vitejs/plugin-vue-jsx": "^3.0.2",
     "autoprefixer": "^10.4.16",
     "daisyui": "^3.9.3",
+    "json-schema-to-typescript": "^13.1.1",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",
