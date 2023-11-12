@@ -15,6 +15,7 @@
     "@neemata/extensions": "^1.0.37",
     "@neemata/common": "^1.0.37",
     "@neemata/application": "^1.0.37",
+    "@neemata/parser-zod": "^1.0.37",
     "@prisma/client": "^5.4.2",
     "better-sqlite3": "^8.6.0",
     "cookie": "^0.5.0",
@@ -24,8 +25,7 @@
     "tsx": "^3.13.0",
     "undici": "^5.25.1",
     "vue": "^3.3.4",
-    "zod": "^3.21.4",
-    "zod-to-json-schema": "^3.21.4"
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.5",
@@ -35,7 +35,6 @@
     "@vitejs/plugin-vue-jsx": "^3.0.2",
     "autoprefixer": "^10.4.16",
     "daisyui": "^3.9.3",
-    "json-schema-to-typescript": "^13.1.1",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",

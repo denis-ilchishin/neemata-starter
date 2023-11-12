@@ -4,6 +4,7 @@ import './styles.css'
 
 const App = defineComponent({
   setup() {
+    /**@type {Client<import('../api.d.ts').Api>} */
     const client = new Client({
       host: '127.0.0.1:42069',
       debug: true,
