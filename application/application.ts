@@ -6,8 +6,8 @@ import {
   SchemaExtension,
   TimeoutExtension,
 } from '@neemata/extensions'
+import { ZodParser } from '@neemata/parser-zod'
 import { fileURLToPath } from 'node:url'
-import { ZodSchema } from 'zod'
 import tasks from './tasks.ts'
 
 const adapter = new Adapter({
@@ -20,18 +20,17 @@ const queues = new QueuesExtension({
   queues: [['*', { concurrency: 1, size: 50, timeout: 100 }]],
 })
 const timeout = new TimeoutExtension(10000)
-const schemas = new SchemaExtension<ZodSchema>({
-  parse: (schema, input) => {
-    return schema?.parseAsync(input)
-  },
+const schemas = new SchemaExtension({
+  export: { typescript: ['./playground/api.d.ts'] },
 })
 const guards = new GuardsExtension()
 
 export const application = new Application(
   adapter,
   {
-    loader: {
-      procedures: fileURLToPath(new URL('./api', import.meta.url)),
+    api: {
+      parser: new ZodParser(),
+      path: fileURLToPath(new URL('./api', import.meta.url)),
     },
     logging: { level: 'trace' },
   },

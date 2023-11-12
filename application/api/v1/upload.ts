@@ -1,16 +1,14 @@
 import { Stream, Transport } from '@neemata/adapter-uws'
 import { Readable, Writable } from 'node:stream'
-import { TypeOf, z } from 'zod'
+import { z } from 'zod'
 import application from '../../application.ts'
 
-const inputSchema = z.object({
-  file: z.custom<Stream>((v) => v instanceof Readable),
-})
-
-export const v1UploadProcedure = application.api.declareProcedure({
-  input: inputSchema,
+export default application.api.declareProcedure({
   transport: Transport.Ws,
-  handle: (ctx, data: TypeOf<typeof inputSchema>) => {
+  input: z.object({
+    file: z.custom<Stream>((v) => v instanceof Readable),
+  }),
+  handle: (ctx, data) => {
     // emulate a writable stream
     const stream = new Writable({ write: (c, e, cb) => cb() })
     data.file.pipe(stream)
@@ -23,5 +21,3 @@ export const v1UploadProcedure = application.api.declareProcedure({
     })
   },
 })
-
-export default v1UploadProcedure
