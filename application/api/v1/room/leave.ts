@@ -1,8 +1,8 @@
 import { Transport } from '@neemata/adapter-uws'
 import { z } from 'zod'
-import application from '../../../application.ts'
+import { declareProcedure } from '../../../helpers.ts'
 
-export default application.api.declareProcedure({
+export default declareProcedure({
   transport: Transport.Ws,
   input: z.object({
     roomId: z.string(),

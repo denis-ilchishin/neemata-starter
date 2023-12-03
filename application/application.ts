@@ -1,5 +1,5 @@
 import { Adapter } from '@neemata/adapter-uws'
-import { Application } from '@neemata/application'
+import { ApiError, Application, ErrorCode } from '@neemata/application'
 import {
   GuardsExtension,
   QueuesExtension,
@@ -8,11 +8,13 @@ import {
 } from '@neemata/extensions'
 import { ZodParser } from '@neemata/parser-zod'
 import { fileURLToPath } from 'node:url'
+import { ZodError } from 'zod'
+import { guardProvider } from './domain/guards.ts'
 import tasks from './tasks.ts'
 
 const adapter = new Adapter({
   hostname: '0.0.0.0',
-  port: 42069,
+  port: +process.env.PORT! || 42069,
   maxPayloadLength: 1024 * 1024 * 11,
   maxStreamChunkLength: 1024 * 1024 * 10,
 })
@@ -42,5 +44,13 @@ export const application = new Application(
     timeout,
   }
 )
+
+application.registerFilter(
+  ZodError,
+  (error) =>
+    new ApiError(ErrorCode.ValidationError, 'Validation error', error.issues)
+)
+
+guards.registerGuard('*', guardProvider)
 
 export default application

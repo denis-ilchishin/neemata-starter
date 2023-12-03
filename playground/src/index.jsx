@@ -4,16 +4,19 @@ import './styles.css'
 
 const App = defineComponent({
   setup() {
+    const port = +import.meta.env.VITE_API_PORT || 42069
+    const hostname = import.meta.env.VITE_API_HOST || '127.0.0.1'
+
     /**@type {Client<import('../api.d.ts').Api>} */
     const client = new Client({
-      host: '127.0.0.1:42069',
+      host: hostname + ':' + port,
       debug: true,
     })
 
     client.connect()
 
     /**
-     * @type {import('vue').Ref<import('@neemata/client-uws').Stream>}
+     * @type {import('vue').Ref<import('@neemata/client-uws').Stream | undefined>}
      */
     const stream = ref()
     const isStarted = ref(false)
@@ -21,6 +24,9 @@ const App = defineComponent({
     const total = ref()
     const done = ref()
     const percent = ref()
+    /**
+     * @type {import('vue').Ref<string[]>}
+     */
     const messages = ref([])
     const isFinished = ref(false)
     const messageText = ref('')
@@ -29,19 +35,22 @@ const App = defineComponent({
     const toMB = (bytes) => (bytes / 1000 ** 2).toFixed(2) + 'MB'
 
     const send = async () => {
-      stream.value.on('pause', () => (isPaused.value = true))
-      stream.value.on('resume', () => (isPaused.value = false))
-      stream.value.on('progress', (size, sent) => {
-        done.value = toMB(sent)
-        percent.value = ((sent / size) * 100).toFixed(2) + '%'
-      })
-      stream.value.once('end', () => {
-        done.value = toMB(stream.value.meta.size)
-        percent.value = '100%'
-      })
-      const data = { file: stream.value }
-      client.once('finished', () => (isFinished.value = true))
-      await client.rpc('v1/upload', data)
+      if (stream.value) {
+        const _stream = stream.value
+        _stream.on('pause', () => (isPaused.value = true))
+        _stream.on('resume', () => (isPaused.value = false))
+        _stream.on('progress', (size, sent) => {
+          done.value = toMB(sent)
+          percent.value = ((sent / size) * 100).toFixed(2) + '%'
+        })
+        _stream.once('end', () => {
+          done.value = toMB(_stream.meta.size)
+          percent.value = '100%'
+        })
+        const data = { file: _stream }
+        client.once('finished', () => (isFinished.value = true))
+        await client.rpc('v1/upload', data)
+      }
     }
 
     const createStream = (event) => {
@@ -130,14 +139,14 @@ const App = defineComponent({
               <button
                 class="btn"
                 disabled={this.isPaused}
-                onClick={() => this.stream.pause()}
+                onClick={() => this.stream?.pause()}
               >
                 Pause
               </button>
               <button
                 class="btn"
                 disabled={!this.isPaused}
-                onClick={() => this.stream.resume()}
+                onClick={() => this.stream?.resume()}
               >
                 Resume
               </button>

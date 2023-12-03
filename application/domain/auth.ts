@@ -1,12 +1,14 @@
-import { defineContext } from '@neemata/server'
+import { Scope } from '@neemata/application'
 import { parse } from 'cookie'
-import authProvider from '../domain/auth.js'
+import { declareProvider } from '../helpers.ts'
+import authProvider from './services/auth.ts'
 
-export default defineContext(
+export default declareProvider(
   {
-    scope: 'connection',
-    factory: async (ctx, { headers }) => {
-      const { cookieName, findUserByToken } = ctx.injections.authService
+    scope: Scope.Connection,
+    factory: async ({ injections, request }) => {
+      const { headers } = request!
+      const { cookieName, findUserByToken } = injections.authService
       const token = parse(headers['cookie'] || '')[cookieName]
       if (!token) return null
       const user = await findUserByToken(token)

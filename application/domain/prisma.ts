@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import application from '../application.ts'
+import { declareProvider } from '../helpers.ts'
 
-export default application.container.declareProvider({
+export default declareProvider({
   factory: async () => {
     const prisma = new PrismaClient()
     await prisma.$connect()

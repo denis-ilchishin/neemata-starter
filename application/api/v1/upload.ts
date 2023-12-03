@@ -1,9 +1,9 @@
 import { Stream, Transport } from '@neemata/adapter-uws'
 import { Readable, Writable } from 'node:stream'
 import { z } from 'zod'
-import application from '../../application.ts'
+import { declareProcedure } from '../../helpers.ts'
 
-export default application.api.declareProcedure({
+export default declareProcedure({
   transport: Transport.Ws,
   input: z.object({
     file: z.custom<Stream>((v) => v instanceof Readable),

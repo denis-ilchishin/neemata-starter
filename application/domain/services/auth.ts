@@ -1,9 +1,9 @@
 import { Prisma, User } from '@prisma/client'
-import application from '../../application.ts'
+import { declareProvider } from '../../helpers.ts'
 import { cryptoProvider } from '../crypto.ts'
 import prisma from '../prisma.ts'
 
-export default application.container.declareProvider(
+export default declareProvider(
   async ({ injections: { prisma, crypto } }) => {
     async function findUserByEmail(email: string) {
       return await prisma.user.findFirst({

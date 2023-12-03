@@ -5,7 +5,7 @@ export const tasks = new TasksExtension({
   path: fileURLToPath(new URL('./tasks', import.meta.url)),
   pool: {
     logLevel: 'trace',
-    extensionPath: fileURLToPath(import.meta.url), // require to be like this since this code is also executed in a worker thread, beside the main thream api
+    extensionPath: fileURLToPath(import.meta.url),
     size: 2, // number of threads
   },
 })
