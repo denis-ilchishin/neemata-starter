@@ -97,6 +97,11 @@ const App = defineComponent({
       alert(res)
     }
 
+    const taskRpc = async () => {
+      const res = await client.rpc('v1/task', undefined, { useHttp: true })
+      alert(res)
+    }
+
     return {
       createStream,
       send,
@@ -111,6 +116,7 @@ const App = defineComponent({
       join,
       leave,
       httpRpc,
+      taskRpc,
       sendMessage,
       messageText,
       joined,
@@ -118,7 +124,7 @@ const App = defineComponent({
   },
   render() {
     return (
-      <div class="grid grid-cols-3 gap-8">
+      <div class="grid grid-cols-2 xl:grid-cols-4 gap-8">
         <div class="bg-slate-700 p-2">
           <div class="flex flex-wrap gap-4 items-center">
             <input
@@ -197,6 +203,11 @@ const App = defineComponent({
         <div class="bg-slate-700 p-2">
           <button class="btn" onClick={this.httpRpc}>
             Make RPC via Http transport
+          </button>
+        </div>
+        <div class="bg-slate-700 p-2">
+          <button class="btn" onClick={this.taskRpc}>
+            Make RPC with task execution
           </button>
         </div>
       </div>

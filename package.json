@@ -1,20 +1,20 @@
 {
   "private": true,
   "scripts": {
-    "task": "./node_modules/.bin/neemata-command --applicationPath=./application/application.ts tasks:run",
-    "server": "./node_modules/.bin/neemata-watch --applicationPath=./application/application.ts",
+    "task": "./node_modules/.bin/neemata-command --entry=./application/server.ts task",
+    "server": "./node_modules/.bin/neemata-watch --entry=./application/server.ts",
     "client": "(cd playground && vite)"
   },
   "author": "ilchishin.denis@gmail.com",
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@neemata/adapter-uws": "1.0.43",
-    "@neemata/application": "1.0.43",
-    "@neemata/cli": "1.0.43",
-    "@neemata/client-uws": "1.0.43",
-    "@neemata/extensions": "1.0.43",
-    "@neemata/parser-zod": "1.0.43",
+    "@neemata/adapter-uws": "1.0.45",
+    "@neemata/application": "1.0.45",
+    "@neemata/cli": "1.0.45",
+    "@neemata/client-uws": "1.0.45",
+    "@neemata/extensions": "1.0.45",
+    "@neemata/parser-zod": "1.0.45",
     "@prisma/client": "^5.5.2",
     "better-sqlite3": "^8.6.0",
     "cookie": "^0.5.0",
