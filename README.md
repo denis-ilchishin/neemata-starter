@@ -1,6 +1,4 @@
-# neemata-starter
-
-Neemata starter project
+# Neemata quick example
 
 ### Guide
 
@@ -15,5 +13,5 @@ npm run client # small demo
 Run the `test` task
 
 ```Bash
-npm run execute test --iterations=100
+npm run execute task test --iterations=100
 ```
