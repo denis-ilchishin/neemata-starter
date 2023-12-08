@@ -15,5 +15,5 @@ npm run client # small demo
 Run the `test` task
 
 ```Bash
-npm run task test --iterations=100
+npm run execute test --iterations=100
 ```

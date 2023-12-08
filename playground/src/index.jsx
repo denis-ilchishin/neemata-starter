@@ -7,7 +7,7 @@ const App = defineComponent({
     const port = +import.meta.env.VITE_API_PORT || 42069
     const hostname = import.meta.env.VITE_API_HOST || '127.0.0.1'
 
-    /**@type {Client<import('../api.d.ts').Api>} */
+    /**@type {Client<import('../../types/api.d.ts').Api>} */
     const client = new Client({
       host: hostname + ':' + port,
       debug: true,

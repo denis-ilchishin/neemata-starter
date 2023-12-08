@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "target": "ESNext",
@@ -12,6 +15,12 @@
     "emitDeclarationOnly": false,
     "jsx": "preserve",
     "strictNullChecks": true,
-    "allowImportingTsExtensions": true
-  }
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "@domain/*": [
+        "./application/domain/*"
+      ]
+    }
+  },
 }
