@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "execute": "neemata --swc --entry=./application/server.ts execute",
-    "server": "neemata watch --swc --entry=./application/server.ts",
+    "server": "neemata --swc --entry=./application/server.ts watch",
     "client": "(cd playground && vite)"
   },
   "author": "ilchishin.denis@gmail.com",
