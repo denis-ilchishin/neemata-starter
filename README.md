@@ -1,6 +1,4 @@
-# neemata-starter
-
-Neemata starter project
+# Neemata quick example
 
 ### Guide
 
