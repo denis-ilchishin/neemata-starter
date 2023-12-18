@@ -1,5 +1,5 @@
+import { httpClientProvider } from '@domain/auth.ts'
 import { guardProvider } from '@domain/guards.ts'
-import { Adapter } from '@neemata/adapter-uws'
 import {
   ApiError,
   Application,
@@ -15,16 +15,20 @@ import {
   StaticApiAnnotations,
   TimeoutExtension,
 } from '@neemata/extensions'
+import { WebsocketsTransport } from '@neemata/transport-websockets'
 import { fileURLToPath } from 'url'
 import { ZodError } from 'zod'
 
 export default declareApplication(
   ({ id, type, tasksRunner, workerOptions: port }) => {
-    const adapter = new Adapter({
+    const clientProvider = httpClientProvider as unknown as never // TODO: fix circular type reference
+    const transport = new WebsocketsTransport<{ token: string }>({
       hostname: '0.0.0.0',
       port,
       maxPayloadLength: 1024 * 1024 * 11,
       maxStreamChunkLength: 1024 * 1024 * 10,
+      clientProvider,
+      http: true,
     })
     const queues = new QueuesExtension({
       queues: [['*', { concurrency: 1, size: 50, timeout: 100 }]],
@@ -33,6 +37,7 @@ export default declareApplication(
     const schemas = new SchemaExtension({})
     const typings = new StaticApiAnnotations({
       output: fileURLToPath(new URL('../types/api.d.ts', import.meta.url)),
+      emit: true,
     })
     const guards = new GuardsExtension()
     const options: ApplicationOptions = {
@@ -49,7 +54,7 @@ export default declareApplication(
       },
     }
 
-    const application = new Application(adapter, options, {
+    const application = new Application(transport, options, {
       queues,
       guards,
       schemas,

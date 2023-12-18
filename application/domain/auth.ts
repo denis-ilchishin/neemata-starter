@@ -1,20 +1,28 @@
 import { Scope } from '@neemata/application'
-import { parse } from 'cookie'
+import { parse } from 'qs'
 import { declareProvider } from '../helpers.ts'
-import authProvider from './services/auth.ts'
+import authServiceProvider from './services/auth.ts'
 
-export default declareProvider(
+export const userProvider = declareProvider(
   {
     scope: Scope.Connection,
-    factory: async ({ injections, request }) => {
-      const { headers } = request!
+    factory: async ({ injections, client }) => {
+      const { token } = client.data
       const { cookieName, findUserByToken } = injections.authService
-      const token = parse(headers['cookie'] || '')[cookieName]
-      if (!token) return null
       const user = await findUserByToken(token)
       if (!user) return null
       return { token, user }
     },
   },
-  { authService: authProvider }
+  { authService: authServiceProvider }
 )
+
+export const httpClientProvider = declareProvider((ctx, { headers }) => {
+  const { cookie, authorization } = headers
+  const token = cookie
+    ? parse(headers['cookie'] || '')
+    : authorization
+    ? authorization.split(': ')[1]
+    : undefined
+  return { token }
+})
