@@ -1,4 +1,4 @@
-import type { Api } from '../../types/api.d.ts'
+import type { Events, Procedures } from '../../types/api.d.ts'
 import './styles.css'
 
 import { WebsocketsClient } from '@neemata/client-websockets'
@@ -8,10 +8,10 @@ const textDecoder = new TextDecoder()
 
 const App = defineComponent({
   setup() {
-    const port = +import.meta.env.VITE_API_PORT || 42069
-    const hostname = import.meta.env.VITE_API_HOST || '127.0.0.1'
+    const port = +(import.meta as any).env.VITE_API_PORT || 42069
+    const hostname = (import.meta as any).env.VITE_API_HOST || '127.0.0.1'
 
-    const client = new WebsocketsClient<Api>({
+    const client = new WebsocketsClient<Procedures, Events>({
       host: hostname + ':' + port,
       debug: true,
     })
@@ -75,6 +75,11 @@ const App = defineComponent({
       alert(res)
     }
 
+    const complexRpc = async () => {
+      const res = await client.rpc('v1/complex')
+      alert(res)
+    }
+
     const taskRpc = async () => {
       const res = await client.rpc('v1/task')
       alert(res)
@@ -130,7 +135,7 @@ const App = defineComponent({
   },
   render() {
     return (
-      <div class="grid grid-cols-3 gap-8">
+      <div class="grid grid-cols-2 gap-8">
         <div class="bg-slate-700 p-2">
           <div class="flex flex-wrap gap-4 items-center">
             <input
@@ -173,12 +178,13 @@ const App = defineComponent({
           )}
         </div>
 
-        <div class="bg-slate-700 p-2">
+        <div class=" bg-slate-700 p-2 flex flex-wrap gap-4">
           <button class="btn" onClick={this.simpleRpc}>
             Make simple RPC call
           </button>
-        </div>
-        <div class="bg-slate-700 p-2">
+          <button class="btn" onClick={this.complexRpc}>
+            Make complex RPC call
+          </button>
           <button class="btn" onClick={this.taskRpc}>
             Make task RPC call
           </button>

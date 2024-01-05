@@ -9,13 +9,13 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@neemata/application": "1.0.54",
-    "@neemata/cli": "1.0.54",
-    "@neemata/client-http": "^1.0.54",
-    "@neemata/client-websockets": "1.0.54",
-    "@neemata/extensions": "1.0.54",
-    "@neemata/parser-zod": "1.0.54",
-    "@neemata/transport-websockets": "1.0.54",
+    "@neemata/application": "1.0.55",
+    "@neemata/cli": "1.0.55",
+    "@neemata/client-http": "^1.0.55",
+    "@neemata/client-websockets": "1.0.55",
+    "@neemata/extensions": "1.0.55",
+    "@neemata/parser-zod": "1.0.55",
+    "@neemata/transport-websockets": "1.0.55",
     "@prisma/client": "^5.5.2",
     "better-sqlite3": "^8.6.0",
     "cookie": "^0.5.0",
@@ -40,6 +40,6 @@
     "vite": "^5.0.7"
   },
   "prisma": {
-    "seed": "node --no-warnings --import swc prisma/seed.ts"
+    "seed": "npm run execute task seed"
   }
 }

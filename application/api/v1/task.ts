@@ -1,8 +1,6 @@
-import { declareProcedure } from '../../helpers.ts'
+import app from '#app'
 import { testTask } from '../../tasks/test.ts'
 
-export default declareProcedure({
-  handle: async ({ execute }) => {
-    return { result: await execute(testTask, 250).result }
-  },
+export default app.procedure().withHandler(async ({ execute }) => {
+  return await execute(testTask, 250).result
 })

@@ -1,13 +1,11 @@
+import { app } from '#app'
 import { PrismaClient } from '@prisma/client'
-import { declareProvider } from '../helpers.ts'
 
-export default declareProvider({
-  factory: async () => {
+export default app
+  .provider()
+  .withFactory(async () => {
     const prisma = new PrismaClient()
     await prisma.$connect()
     return prisma
-  },
-  dispose: async (ctx, prisma) => {
-    await prisma.$disconnect()
-  },
-})
+  })
+  .withDisposal((prisma) => prisma.$disconnect())

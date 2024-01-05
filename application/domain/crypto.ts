@@ -1,11 +1,11 @@
+import app from '#app'
 import { createHash, randomBytes } from 'node:crypto'
-import { declareProvider } from '../helpers.ts'
 
 const algorithm = 'md5'
 const encoding = 'hex'
 
 // just an example
-export const cryptoProvider = declareProvider(() => {
+export const cryptoProvider = app.provider().withFactory(() => {
   function hash(input: string) {
     return createHash(algorithm).update(input).digest(encoding)
   }

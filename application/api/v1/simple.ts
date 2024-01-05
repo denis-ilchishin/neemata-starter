@@ -1,6 +1,5 @@
-import { declareProcedure } from '../../helpers.ts'
+import app from '#app'
 
-export default declareProcedure({
-  handle: () =>
-    'Yay! This is the response from the server. You have made a simple rpc call!',
+export default app.procedure().withHandler(() => {
+  return 'Yay! This is the response from the server. You have made a simple rpc call!'
 })
