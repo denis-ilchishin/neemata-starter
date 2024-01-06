@@ -19,7 +19,7 @@ export const middlewaresProvider = app.provider().withFactory(({ logger }) => {
       successful = false
       throw err
     } finally {
-      logger.info({
+      logger.info('Logging middleware', {
         client: client.data,
         procedure: name,
         successful,

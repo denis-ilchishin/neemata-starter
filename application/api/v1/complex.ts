@@ -29,8 +29,13 @@ export default app
   .withMiddlewares(({ injections: { middlewares } }) => [
     middlewares.loggingMiddleware,
   ])
-  .withHandler(async ({ call }) => {
+  .withHandler(async ({ call }, data) => {
     // call another procedure
     const nestedResult = await call(simpleProcedure)
     return nestedResult
   })
+  .withOutput(
+    z.any().transform((val: string) => ({
+      transformed: val,
+    }))
+  )

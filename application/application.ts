@@ -7,7 +7,7 @@ import {
 import { SchemaExtension, StaticApiAnnotations } from '@neemata/extensions'
 import { ZodParser } from '@neemata/parser-zod'
 import { WebsocketsTransport } from '@neemata/transport-websockets'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import { events } from './events.ts'
 
 const { workerOptions: port, type, tasksRunner } = injectWorkerOptions()
@@ -28,7 +28,7 @@ const typings = new StaticApiAnnotations({
 const options: ApplicationOptions = {
   type,
   logging: {
-    destinations: [createConsoleDestination('debug')],
+    destinations: [createConsoleDestination('info')],
   },
   api: {
     parsers: new ZodParser(),
