@@ -6,18 +6,25 @@ import {
 } from '@neemata/application'
 import { SchemaExtension, StaticApiAnnotations } from '@neemata/extensions'
 import { ZodParser } from '@neemata/parser-zod'
+import { HttpTransport } from '@neemata/transport-http'
 import { WebsocketsTransport } from '@neemata/transport-websockets'
 import { fileURLToPath } from 'node:url'
 import { events } from './events.ts'
 
-const { workerOptions: port, type, tasksRunner } = injectWorkerOptions()
-
-const transport = new WebsocketsTransport({
+const { workerOptions, type, tasksRunner } = injectWorkerOptions()
+const [httpPort, wsPort] = workerOptions ?? []
+const httpOptions = {
   hostname: '0.0.0.0',
-  port,
   maxPayloadLength: 1024 * 1024 * 11,
   maxStreamChunkLength: 1024 * 1024 * 10,
-  http: true,
+}
+const wsTransport = new WebsocketsTransport({
+  ...httpOptions,
+  port: wsPort,
+})
+const httpTransport = new HttpTransport({
+  ...httpOptions,
+  port: httpPort,
 })
 const schemas = new SchemaExtension()
 const typings = new StaticApiAnnotations({
@@ -40,11 +47,10 @@ const options: ApplicationOptions = {
   },
 }
 
-export const app = new Application(options, transport, {
-  schemas,
-  typings,
-})
-  .withClientData<{ token: string }>()
+export default new Application(options)
+  .withTransport(wsTransport, 'websockets')
+  .withTransport(httpTransport, 'http')
+  .withExtension(schemas, 'schemas')
+  .withExtension(typings, 'typings')
+  .withConnection<undefined | { scope: string; id: number }>()
   .withEvents(events)
-
-export default app

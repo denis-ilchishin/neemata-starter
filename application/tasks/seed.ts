@@ -1,6 +1,6 @@
 import app from '#app'
 import { cryptoProvider } from '#domain/crypto.ts'
-import prismaProvider from '#domain/prisma.ts'
+import { prismaProvider } from '#domain/prisma.ts'
 
 export default app
   .task()
@@ -8,8 +8,7 @@ export default app
     db: prismaProvider,
     crypto: cryptoProvider,
   })
-  .withHandler(async ({ logger, injections }) => {
-    const { db, crypto } = injections
+  .withHandler(async ({ app, db, crypto }) => {
     const user = await db.user.create({
       data: {
         email: 'someEmail',
@@ -17,5 +16,5 @@ export default app
         type: 'ADMIN',
       },
     })
-    logger.info(`Created [${user.type}] user with [${user.email}] email`)
+    app.logger.info(`Created [${user.type}] user with [${user.email}] email`)
   })

@@ -1,7 +1,7 @@
-import app from '#app'
+import { publicProcedure } from '#procedures'
 import { BinaryStreamResponse } from '@neemata/application'
 
-export default app.procedure().withHandler(({ logger, client }) => {
+export default publicProcedure.withHandler(() => {
   const response = new BinaryStreamResponse('plain/text')
 
   let i = 0

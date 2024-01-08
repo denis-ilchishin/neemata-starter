@@ -1,5 +1,5 @@
-import app from '#app'
+import { publicProcedure } from '#procedures'
 
-export default app.procedure().withHandler(() => {
+export default publicProcedure.withHandler(() => {
   return 'Yay! This is the response from the server. You have made a simple rpc call!'
 })

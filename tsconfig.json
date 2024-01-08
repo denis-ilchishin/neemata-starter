@@ -17,6 +17,9 @@
       "#app": [
         "./application/application.ts"
       ],
+      "#procedures": [
+        "./application/procedures.ts"
+      ],
       "#domain/*": [
         "./application/domain/*"
       ]

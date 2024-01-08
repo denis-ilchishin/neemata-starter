@@ -1,7 +1,7 @@
-import app from '#app'
+import { publicProcedure } from '#procedures'
 import { JsonStreamResponse } from '@neemata/application'
 
-export default app.procedure().withHandler(({ logger }) => {
+export default publicProcedure.withHandler(({ app }) => {
   const response = new JsonStreamResponse().withChunk<[string, number]>()
 
   let i = 0
@@ -17,7 +17,7 @@ export default app.procedure().withHandler(({ logger }) => {
 
   response.once('error', (error) => {
     clearInterval(interval)
-    logger.error(error)
+    app.logger.error(error)
   })
 
   return response.withPayload({

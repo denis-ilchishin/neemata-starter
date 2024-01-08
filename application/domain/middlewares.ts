@@ -1,12 +1,7 @@
 import app from '#app'
-import { MiddlewareFn } from '@neemata/application'
 
-export const middlewaresProvider = app.provider().withFactory(({ logger }) => {
-  const loggingMiddleware: MiddlewareFn = async (
-    { name, client },
-    next,
-    payload
-  ) => {
+export const loggingMiddleware = app.middleware().withFactory(({ app }) => {
+  return async ({ name, connection }, next, payload) => {
     let successful: boolean = false
     let error: Error | undefined
     let result: any
@@ -15,19 +10,21 @@ export const middlewaresProvider = app.provider().withFactory(({ logger }) => {
       successful = true
       return result
     } catch (err) {
-      error = error
+      error = err
       successful = false
       throw err
     } finally {
-      logger.info('Logging middleware', {
-        client: client.data,
-        procedure: name,
-        successful,
-        payload,
-        result,
-        error,
-      })
+      app.logger.info(
+        {
+          connection,
+          procedure: name,
+          successful,
+          payload,
+          result,
+          error,
+        },
+        'Logging middleware'
+      )
     }
   }
-  return { loggingMiddleware }
 })

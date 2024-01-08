@@ -1,11 +1,14 @@
 import app from '#app'
+import { HttpTransportMethod } from '@neemata/transport-http'
 
-export const guardsProvider = app.provider().withFactory(() => {
-  const someGuard1 = () => true
-  const someGuard2 = () => true
+export const httpOnlyGuard = app
+  .guard()
+  .withValue(({ connection }) => connection.transportData.transport === 'http')
 
-  return {
-    someGuard1,
-    someGuard2,
-  }
-})
+export const postMethodOnlyGuard = app
+  .guard()
+  .withValue(
+    ({ connection: { transportData } }) =>
+      transportData.transport === 'http' &&
+      transportData.method === HttpTransportMethod.Post
+  )

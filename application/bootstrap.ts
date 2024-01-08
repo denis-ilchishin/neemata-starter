@@ -1,5 +1,5 @@
 import app from '#app'
-import { clientProvider } from '#domain/auth.ts'
+import { connectionProvider } from '#domain/connection.ts'
 import { ApiError, ErrorCode } from '@neemata/application'
 import { ZodError } from 'zod'
 
@@ -9,6 +9,6 @@ app.registerFilter(
     new ApiError(ErrorCode.ValidationError, 'Validation error', error.issues)
 )
 
-app.registerClientProvider(clientProvider)
+app.registerConnection(connectionProvider)
 
 export default app

@@ -1,16 +1,16 @@
 import app from '#app'
-import { cryptoProvider } from '../domain/crypto.ts'
+import { cryptoProvider } from '#domain/crypto.ts'
 
 export const testTask = app
   .task()
   .withDependencies({ crypto: cryptoProvider })
-  .withHandler(async ({ logger, injections }, interations: number) => {
-    logger.info(
+  .withHandler(async ({ app, crypto }, interations: number) => {
+    app.logger.info(
       'Some CPU-heavy task is being done here with %s iterations...',
       interations
     )
     for (let i = 0; i < interations; i++) {
-      injections.crypto.hash(''.padEnd(10, (i ** 2).toString()))
+      crypto.hash(''.padEnd(10, (i ** 2).toString()))
     }
     return `Done with ${interations} iterations.`
   })

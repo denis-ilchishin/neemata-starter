@@ -1,7 +1,7 @@
-import { app } from '#app'
+import app from '#app'
 import { PrismaClient } from '@prisma/client'
 
-export default app
+export const prismaProvider = app
   .provider()
   .withFactory(async () => {
     const prisma = new PrismaClient()

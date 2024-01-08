@@ -1,12 +1,14 @@
 import app from '#app'
+import { ApiError, ErrorCode, Scope } from '@neemata/application'
 import { Prisma, User } from '@prisma/client'
 import { cryptoProvider } from '../crypto.ts'
-import prisma from '../prisma.ts'
+import { prismaProvider } from '../prisma.ts'
+import { usersService } from './users.ts'
 
-export default app
+export const authService = app
   .provider()
-  .withDependencies({ prisma, crypto: cryptoProvider })
-  .withFactory(async ({ injections: { prisma, crypto } }) => {
+  .withDependencies({ prisma: prismaProvider, crypto: cryptoProvider })
+  .withFactory(async ({ prisma, crypto }) => {
     async function findUserByEmail(email: string) {
       return await prisma.user.findFirst({
         where: { email },
@@ -49,4 +51,32 @@ export default app
       deleteUserToken,
       cookieName: 'token',
     }
+  })
+
+export const userProvider = app
+  .provider()
+  .withDependencies({ usersService })
+  .withScope(Scope.Call)
+  .withFactory(async ({ app: { connection }, usersService }) => {
+    if (!connection.data) return null
+    const { id } = connection.data
+    const user = await usersService.getUserById(id)
+    if (!user) return null
+    return user
+  })
+
+export const authenticatedUserProvider = app
+  .provider()
+  .withDependencies({ user: userProvider })
+  .withFactory(async ({ user }) => {
+    if (!user) throw new ApiError(ErrorCode.Forbidden)
+    return user
+  })
+
+export const adminUserProvider = app
+  .provider()
+  .withDependencies({ user: authenticatedUserProvider })
+  .withFactory(async ({ user }) => {
+    if (user.type !== 'ADMIN') throw new ApiError(ErrorCode.Forbidden)
+    return user
   })

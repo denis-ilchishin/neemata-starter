@@ -7,20 +7,25 @@ import { reactive, ref } from 'vue'
 
 const textDecoder = new TextDecoder()
 
-const port = +(import.meta as any).env.VITE_API_PORT || 42069
+const httpPort = +(import.meta as any).env.VITE_API_PORT || 42069
+const wsPort = +(import.meta as any).env.VITE_API_PORT || 42070
 const hostname = (import.meta as any).env.VITE_API_HOST || '127.0.0.1'
 
+// Swap the client to use HTTP instead of Websockets
+// import { HttpClient } from '@neemata/client-http'
+// const client = new HttpClient({
+//   host: hostname + ':' + httpPort,
+//   debug: true,
+// })
+
 const client = new WebsocketsClient<Procedures, Events>({
-  host: hostname + ':' + port,
+  host: hostname + ':' + wsPort,
   debug: true,
 })
 
 client.connect()
 
-/**
- * @type {import('vue').Ref<undefined | Awaited<ReturnType<typeof client['createStream']>>>}
- */
-const streamRef = ref()
+const streamRef = ref<Awaited<ReturnType<WebsocketsClient['createStream']>>>()
 const isStarted = ref(false)
 const isPaused = ref(true)
 const total = ref()
@@ -45,6 +50,7 @@ const send = async () => {
     const stream = streamRef.value
     stream.on('pause', () => (isPaused.value = true))
     stream.on('resume', () => (isPaused.value = false))
+    stream.on('', () => (isPaused.value = false))
     stream.on('progress', (sent) => {
       done.value = toMB(sent)
       percent.value = ((sent / stream.metadata.size) * 100).toFixed(2) + '%'
@@ -70,20 +76,23 @@ const createStream = async (event) => {
 }
 
 const simpleRpc = async () => {
-  const res = await client.rpc('v1/simple')
+  const res = await client.rpc('v1/simple').catch((err) => err.message)
   alert(res)
 }
 
 const complexRpc = async () => {
-  const res = await client.rpc('v1/complex', {
-    input1: 'input1',
-    input2: 'input1',
-  })
-  alert(JSON.stringify(res))
+  const res = await client
+    .rpc('v1/complex', {
+      input1: 'input1',
+      input2: 'input1',
+    })
+    .then(JSON.stringify)
+    .catch((err) => err.message)
+  alert(res)
 }
 
 const taskRpc = async () => {
-  const res = await client.rpc('v1/task')
+  const res = await client.rpc('v1/task').catch((err) => err.message)
   alert(res)
 }
 
