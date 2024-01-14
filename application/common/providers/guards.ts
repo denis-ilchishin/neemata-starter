@@ -1,5 +1,5 @@
-import app from '#app'
-import { HttpTransportMethod } from '@neemata/transport-http'
+import { HttpTransportMethod } from '@neemata/transport-websockets/dist/lib/common'
+import app from 'application/application.ts'
 
 export const httpOnlyGuard = app
   .guard()

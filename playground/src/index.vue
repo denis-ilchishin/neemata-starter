@@ -2,30 +2,24 @@
 import type { Events, Procedures } from '../../types/api.d.ts'
 import './styles.css'
 
-import { WebsocketsClient } from '@neemata/client-websockets'
-import { reactive, ref } from 'vue'
+import { WebsocketsClient, type UpStream } from '@neemata/client-websockets'
+import { onBeforeUnmount, reactive, ref } from 'vue'
 
 const textDecoder = new TextDecoder()
 
-const httpPort = +(import.meta as any).env.VITE_API_PORT || 42069
-const wsPort = +(import.meta as any).env.VITE_API_PORT || 42070
+const port = +(import.meta as any).env.VITE_API_PORT || 42069
 const hostname = (import.meta as any).env.VITE_API_HOST || '127.0.0.1'
 
-// Swap the client to use HTTP instead of Websockets
-// import { HttpClient } from '@neemata/client-http'
-// const client = new HttpClient({
-//   host: hostname + ':' + httpPort,
-//   debug: true,
-// })
-
 const client = new WebsocketsClient<Procedures, Events>({
-  host: hostname + ':' + wsPort,
+  host: hostname + ':' + port,
   debug: true,
 })
 
 client.connect()
 
-const streamRef = ref<Awaited<ReturnType<WebsocketsClient['createStream']>>>()
+onBeforeUnmount(() => client.disconnect())
+
+const streamRef = ref<UpStream>()
 const isStarted = ref(false)
 const isPaused = ref(true)
 const total = ref()
@@ -33,6 +27,7 @@ const done = ref()
 const percent = ref()
 const isFinished = ref(false)
 const messageText = ref('')
+const messages = ref<string[]>([])
 const joined = ref(false)
 const jsonStream = reactive<any>({
   payload: undefined,
@@ -45,7 +40,7 @@ const binaryStream = reactive<any>({
 
 const toMB = (bytes) => (bytes / 1000 ** 2).toFixed(2) + 'MB'
 
-const send = async () => {
+const upload = async () => {
   if (streamRef.value) {
     const stream = streamRef.value
     stream.on('pause', () => (isPaused.value = true))
@@ -60,8 +55,8 @@ const send = async () => {
       percent.value = '100%'
     })
     const data = { file: stream }
-    client.once('finished', () => (isFinished.value = true))
-    await client.rpc('v1/upload', data)
+    client.once('example/uploadFinish', (data) => (isFinished.value = true))
+    await client.rpc('example/v1/upload', data)
   }
 }
 
@@ -76,13 +71,13 @@ const createStream = async (event) => {
 }
 
 const simpleRpc = async () => {
-  const res = await client.rpc('v1/simple').catch((err) => err.message)
+  const res = await client.rpc('example/v1/simple').catch((err) => err.message)
   alert(res)
 }
 
 const complexRpc = async () => {
   const res = await client
-    .rpc('v1/complex', {
+    .rpc('example/v1/complex', {
       input1: 'input1',
       input2: 'input1',
     })
@@ -92,14 +87,14 @@ const complexRpc = async () => {
 }
 
 const taskRpc = async () => {
-  const res = await client.rpc('v1/task').catch((err) => err.message)
+  const res = await client.rpc('example/v1/task').catch((err) => err.message)
   alert(res)
 }
 
 const streamJsonRpc = async () => {
   jsonStream.payload = undefined
   jsonStream.chunks = []
-  const { payload, stream } = await client.rpc('v1/stream-json')
+  const { payload, stream } = await client.rpc('example/v1/stream-json')
   jsonStream.payload = payload
   try {
     for await (const chunk of stream) {
@@ -113,7 +108,7 @@ const streamJsonRpc = async () => {
 const streamBinaryRpc = async () => {
   binaryStream.payload = undefined
   binaryStream.chunks = []
-  const { payload, stream } = await client.rpc('v1/stream-binary')
+  const { payload, stream } = await client.rpc('example/v1/stream-binary')
   binaryStream.payload = payload
   try {
     for await (const chunk of stream) {
@@ -123,6 +118,29 @@ const streamBinaryRpc = async () => {
     console.error(error)
   }
 }
+
+const join = async () => {
+  const sub = await client.rpc('chat-example/v1/join', { chatId: 1 })
+  sub.on('data', ({ message }) => {
+    messages.value.push(message)
+  })
+  sub.once('end', () => {
+    joined.value = false
+  })
+  joined.value = true
+}
+
+const leave = async () => {
+  await client.rpc('chat-example/v1/leave', { chatId: 1 })
+}
+
+const send = async () => {
+  await client.rpc('chat-example/v1/message', {
+    chatId: 1,
+    message: messageText.value,
+  })
+  messageText.value = ''
+}
 </script>
 
 <template>
@@ -130,7 +148,7 @@ const streamBinaryRpc = async () => {
     <div class="bg-slate-700 p-2">
       <div class="flex flex-wrap gap-4 items-center">
         <input class="file-input" type="file" multiple @change="createStream" />
-        <button class="btn" @click="send" :disabled="!streamRef">Send</button>
+        <button class="btn" @click="upload" :disabled="!streamRef">Send</button>
       </div>
       <template v-if="isStarted">
         <button
@@ -170,17 +188,17 @@ const streamBinaryRpc = async () => {
         <div>
           Payload:
           <div class="mockup-code">
-            <pre v-if="jsonStream.payload">
-                    <code>{{jsonStream.payload}}</code>
-                  </pre>
+            <pre v-if="jsonStream.payload">{{
+              JSON.stringify(jsonStream.payload)
+            }}</pre>
           </div>
         </div>
         <div>
           Chunks:
           <div class="mockup-code">
-            <pre v-for="(chunk, i) in jsonStream.chunks" :data-prefix="i + 1">
-                    <code>{{ chunk }}</code>
-                  </pre>
+            <pre v-for="(chunk, i) in jsonStream.chunks" :data-prefix="i">{{
+              JSON.stringify(chunk)
+            }}</pre>
           </div>
         </div>
       </div>
@@ -193,18 +211,44 @@ const streamBinaryRpc = async () => {
         <div>
           Payload:
           <div class="mockup-code">
-            <pre v-if="binaryStream.payload">
-                    <code>{{binaryStream.payload}}</code>
-                  </pre>
+            <pre v-if="binaryStream.payload">{{
+              JSON.stringify(binaryStream.payload)
+            }}</pre>
           </div>
         </div>
         <div>
           Chunks:
           <div class="mockup-code">
-            <pre v-for="(chunk, i) in binaryStream.chunks" :data-prefix="i + 1">
-                    <code>{{ chunk }}</code>
-                  </pre>
+            <pre
+              v-for="(chunk, i) in binaryStream.chunks"
+              :data-prefix="i + 1"
+            ><code>{{ chunk }}</code></pre>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-2 min-h-96">
+      <div
+        class="h-full mx-auto max-w-screen-sm bg-slate-700 p-2 flex flex-col"
+      >
+        <div class="flex justify-around">
+          <button class="btn" :disabled="joined" @click="join">
+            Join chat
+          </button>
+          <button class="btn" :disabled="!joined" @click="leave">
+            Leave chat
+          </button>
+        </div>
+        <div class="flex-1">
+          <div v-for="(message, i) in messages" class="chat chat-start">
+            <div class="chat-bubble">
+              {{ message }}
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-row gap-2">
+          <input type="text" class="input w-full" v-model="messageText" />
+          <button class="btn" @click="send">Send</button>
         </div>
       </div>
     </div>

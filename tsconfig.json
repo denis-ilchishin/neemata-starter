@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "target": "ESNext",
     "noImplicitAny": false,
     "allowJs": true,
@@ -15,13 +15,16 @@
     "baseUrl": ".",
     "paths": {
       "#app": [
-        "./application/application.ts"
+        "application/application.ts"
       ],
       "#procedures": [
         "./application/procedures.ts"
       ],
-      "#domain/*": [
-        "./application/domain/*"
+      "#common/*": [
+        "./application/common/*"
+      ],
+      "#modules/*": [
+        "./application/modules/*"
       ]
     }
   }

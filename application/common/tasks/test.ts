@@ -1,11 +1,11 @@
 import app from '#app'
-import { cryptoProvider } from '#domain/crypto.ts'
+import { cryptoProvider } from 'application/common/providers/crypto.ts'
 
 export const testTask = app
   .task()
   .withDependencies({ crypto: cryptoProvider })
-  .withHandler(async ({ app, crypto }, interations: number) => {
-    app.logger.info(
+  .withHandler(async ({ context, crypto }, interations: number) => {
+    context.logger.info(
       'Some CPU-heavy task is being done here with %s iterations...',
       interations
     )
@@ -15,7 +15,7 @@ export const testTask = app
     return `Done with ${interations} iterations.`
   })
   .withParser((args, kwargs) => {
-    // manually parse agruments for CLI
+    // manually parse command line agruments
     const iterations = Array.isArray(kwargs.iterations)
       ? kwargs.iterations[0]
       : kwargs.iterations

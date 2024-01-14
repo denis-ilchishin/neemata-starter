@@ -1,4 +1,4 @@
-import app from '#app'
+import app from 'application/application.ts'
 import { createHash, randomBytes } from 'node:crypto'
 
 const algorithm = 'md5'

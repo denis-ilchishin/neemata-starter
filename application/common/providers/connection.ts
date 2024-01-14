@@ -1,6 +1,6 @@
-import app from '#app'
+import app from 'application/application.ts'
 import { parse } from 'cookie'
-import { authService } from './services/auth.ts'
+import { authService } from './auth.ts'
 
 export const connectionProvider = app
   .connection()

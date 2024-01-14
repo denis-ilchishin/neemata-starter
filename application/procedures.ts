@@ -1,10 +1,10 @@
-import app from '#app'
-import { loggingMiddleware } from '#domain/middlewares.ts'
-import { prismaProvider } from '#domain/prisma.ts'
 import {
   adminUserProvider,
   authenticatedUserProvider,
-} from '#domain/services/auth.ts'
+} from '#common/providers/users.ts'
+import app from 'application/application.ts'
+import { loggingMiddleware } from 'application/common/providers/middlewares.ts'
+import { prismaProvider } from 'application/common/providers/prisma.ts'
 
 const globalDeps = {
   db: prismaProvider,

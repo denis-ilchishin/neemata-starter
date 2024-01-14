@@ -1,7 +1,6 @@
 import app from '#app'
-import { cryptoProvider } from '#domain/crypto.ts'
-import { loggingMiddleware } from '#domain/middlewares.ts'
-import { adminUserProvider } from '#domain/services/auth.ts'
+import { cryptoProvider } from '#common/providers/crypto.ts'
+import { loggingMiddleware } from '#common/providers/middlewares.ts'
 import { z } from 'zod'
 import simpleProcedure from './simple.ts'
 
@@ -13,7 +12,7 @@ export default app
   .withTimeout(5000)
   .withDependencies({
     crypto: cryptoProvider,
-    user: adminUserProvider,
+    // user: adminUserProvider,
   })
   .withMiddlewares(loggingMiddleware)
   .withInput(
@@ -22,9 +21,9 @@ export default app
       input2: z.string(),
     })
   )
-  .withHandler(async ({ app }, data) => {
+  .withHandler(async ({ context }, data) => {
     // call another procedure
-    const nestedResult = await app.call(simpleProcedure)
+    const nestedResult = await context.call(simpleProcedure)
     return nestedResult
   })
   .withOutput(

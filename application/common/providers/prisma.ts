@@ -1,5 +1,5 @@
-import app from '#app'
 import { PrismaClient } from '@prisma/client'
+import app from 'application/application.ts'
 
 export const prismaProvider = app
   .provider()
