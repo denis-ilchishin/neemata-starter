@@ -1,11 +1,20 @@
-import app from '#app'
+import {
+  EVENT_MANAGER_PROVIDER,
+  LOGGER_PROVIDER,
+  Task,
+} from '@neematajs/application'
 import { messageEvent } from './events.ts'
 
-export const transportMessageTask = app
-  .task()
+export const tranformMessageTask = new Task()
+  .withDependencies({
+    eventManager: EVENT_MANAGER_PROVIDER,
+    logger: LOGGER_PROVIDER,
+  })
   .withArgs<[{ chatId: number; message: string }]>()
-  .withHandler(async ({ context }, { chatId, message }) => {
-    await context.eventManager.publish(
+  .withHandler(async ({ eventManager, logger }, { chatId, message }) => {
+    // here we can emit an event to the clients, that are connected to api workers
+    logger.info({ chatId, message }, 'Transforming message')
+    await eventManager.publish(
       messageEvent,
       { message: 'Transformed: ' + message },
       { chatId }

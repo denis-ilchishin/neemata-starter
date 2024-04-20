@@ -1,18 +1,15 @@
-import app from '#app'
+import { defaultProcedure } from '#common/procedure.ts'
 import { cryptoProvider } from '#common/providers/crypto.ts'
 import { loggingMiddleware } from '#common/providers/middlewares.ts'
+import { CALL_PROVIDER } from '@neematajs/application'
 import { z } from 'zod'
 import simpleProcedure from './simple.ts'
 
-export default app
-  .procedure()
-  .withOptions({
-    someOptionsForExtensions: 'some value',
-  })
+export default defaultProcedure
   .withTimeout(5000)
   .withDependencies({
     crypto: cryptoProvider,
-    // user: adminUserProvider,
+    call: CALL_PROVIDER,
   })
   .withMiddlewares(loggingMiddleware)
   .withInput(
@@ -21,9 +18,9 @@ export default app
       input2: z.string(),
     })
   )
-  .withHandler(async ({ context }, data) => {
+  .withHandler(async ({ call }, data) => {
     // call another procedure
-    const nestedResult = await context.call(simpleProcedure)
+    const nestedResult = await call(simpleProcedure)
     return nestedResult
   })
   .withOutput(

@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "moduleResolution": "Bundler",
-    "module": "ESNext",
+    "lib": ["ES2023"],
     "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noImplicitAny": false,
     "allowJs": true,
     "checkJs": true,
@@ -14,18 +15,9 @@
     "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
-      "#app": [
-        "application/application.ts"
-      ],
-      "#procedures": [
-        "./application/procedures.ts"
-      ],
-      "#common/*": [
-        "./application/common/*"
-      ],
-      "#modules/*": [
-        "./application/modules/*"
-      ]
+      "#app": ["application/application.ts"],
+      "#common/*": ["./application/common/*"],
+      "#modules/*": ["./application/modules/*"]
     }
   }
 }

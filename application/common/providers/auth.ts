@@ -1,10 +1,9 @@
-import app from '#app'
+import { Provider } from '@neematajs/application'
 import { Prisma, User } from '@prisma/client'
 import { cryptoProvider } from './crypto.ts'
 import { prismaProvider } from './prisma.ts'
 
-export const authService = app
-  .provider()
+export const authService = new Provider()
   .withDependencies({ prisma: prismaProvider, crypto: cryptoProvider })
   .withFactory(async ({ prisma, crypto }) => {
     async function findUserByEmail(email: string) {

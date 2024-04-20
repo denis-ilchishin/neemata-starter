@@ -1,49 +1,43 @@
+import { chatExampleModule } from '#modules/chat-example/module.ts'
+import { exampleModule } from '#modules/example/module.ts'
 import {
+  ApiError,
+  AppClient,
   Application,
   ApplicationOptions,
-  ModuleLoader,
-  PlainLoader,
-  WorkerThreadsSubscriptionManager,
+  BasicSubscriptionManager,
+  ErrorCode,
+  Provider,
   createConsoleDestination,
+} from '@neematajs/application'
+import { ZodParser } from '@neematajs/parser-zod'
+import {
+  WorkerThreadsSubscriptionManager,
   injectWorkerOptions,
-} from '@neemata/application'
-import { SchemaExtension, StaticApiAnnotations } from '@neemata/extensions'
-import { ZodParser } from '@neemata/parser-zod'
-import { WebsocketsTransport } from '@neemata/transport-websockets'
-import { fileURLToPath } from 'node:url'
+} from '@neematajs/server'
+import { WebsocketsTransport } from '@neematajs/transport-websockets'
+import { ZodError } from 'zod'
+import { coreModule } from './core/module.ts'
 
-const { workerOptions, type, tasksRunner } = injectWorkerOptions()
-const [port] = workerOptions ?? []
-const transport = new WebsocketsTransport({
-  hostname: '0.0.0.0',
-  maxPayloadLength: 1024 * 1024 * 11,
-  maxStreamChunkLength: 1024 * 1024 * 10,
-  port,
-})
-const subManager = new WorkerThreadsSubscriptionManager()
-const schemas = new SchemaExtension()
-const typings = new StaticApiAnnotations({
-  outputPath: fileURLToPath(new URL('../types/api.d.ts', import.meta.url)),
-  emit: true,
-})
+const {
+  isServer,
+  workerOptions,
+  workerType: type,
+  tasksRunner,
+} = injectWorkerOptions()
+
+const [port = 42069] = workerOptions ?? []
+
 const options: ApplicationOptions = {
   type,
   logging: {
     destinations: [createConsoleDestination('trace')],
   },
-  loaders: [
-    new PlainLoader({
-      tasks: fileURLToPath(new URL('./common/tasks', import.meta.url)),
-    }),
-    new ModuleLoader({
-      root: fileURLToPath(new URL('./modules', import.meta.url)),
-    }),
-  ],
-  events: {
+  api: {
+    parsers: new ZodParser(),
     timeout: 15000,
   },
-  procedures: {
-    parsers: new ZodParser(),
+  events: {
     timeout: 15000,
   },
   tasks: {
@@ -53,10 +47,29 @@ const options: ApplicationOptions = {
 }
 
 export const app = new Application(options)
-  .withTransport(transport, 'websockets')
-  .withSubscriptionManager(subManager)
-  .withExtension(schemas, 'schemas')
-  .withExtension(typings, 'typings')
-  .withConnection<undefined | { scope: string; id: number }>()
+  .registerTransport(WebsocketsTransport, {
+    hostname: '0.0.0.0',
+    maxPayloadLength: 1024 * 1024 * 11,
+    maxStreamChunkLength: 1024 * 1024 * 10,
+    port,
+  })
+  .registerSubscriptionManager(
+    isServer ? WorkerThreadsSubscriptionManager : BasicSubscriptionManager
+  )
+  .registerModules({
+    core: coreModule,
+    chatExample: chatExampleModule,
+    example: exampleModule,
+  })
+
+app.registry.registerFilter(
+  ZodError,
+  new Provider().withValue(
+    (error) =>
+      new ApiError(ErrorCode.ValidationError, 'Validation error', error.issues)
+  )
+)
+
+export type Client = AppClient<typeof app>
 
 export default app

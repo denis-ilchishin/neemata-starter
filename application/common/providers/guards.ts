@@ -1,14 +1,11 @@
-import { HttpTransportMethod } from '@neemata/transport-websockets/dist/lib/common'
-import app from 'application/application.ts'
+import { Guard } from '@neematajs/application'
+import { HttpTransportMethod } from '@neematajs/transport-websockets/dist/lib/common.ts'
 
-export const httpOnlyGuard = app
-  .guard()
-  .withValue(({ connection }) => connection.transportData.transport === 'http')
+export const httpOnlyGuard = new Guard().withValue(
+  ({ connection }) => connection.data.transport === 'http'
+)
 
-export const postMethodOnlyGuard = app
-  .guard()
-  .withValue(
-    ({ connection: { transportData } }) =>
-      transportData.transport === 'http' &&
-      transportData.method === HttpTransportMethod.Post
-  )
+export const postMethodOnlyGuard = new Guard().withValue(
+  ({ connection: { data } }) =>
+    data.transport === 'http' && data.method === HttpTransportMethod.Post
+)

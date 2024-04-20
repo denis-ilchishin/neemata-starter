@@ -1,3 +1,3 @@
-import app from '#app'
+import { Event } from '@neematajs/application'
 
-export const uploadFinishEvent = app.event().withPayload<string>()
+export const uploadFinishEvent = new Event().withPayload<string>()

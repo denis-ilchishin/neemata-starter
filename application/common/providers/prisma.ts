@@ -1,8 +1,7 @@
+import { Provider } from '@neematajs/application'
 import { PrismaClient } from '@prisma/client'
-import app from 'application/application.ts'
 
-export const prismaProvider = app
-  .provider()
+export const prismaProvider = new Provider()
   .withFactory(async () => {
     const prisma = new PrismaClient()
     await prisma.$connect()

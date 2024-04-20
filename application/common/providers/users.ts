@@ -1,9 +1,13 @@
-import app from '#app'
-import { ApiError, ErrorCode, Scope } from '@neemata/application'
+import {
+  ApiError,
+  CONNECTION_PROVIDER,
+  ErrorCode,
+  Provider,
+  Scope,
+} from '@neematajs/application'
 import { prismaProvider } from './prisma.ts'
 
-export const usersService = app
-  .provider()
+export const usersService = new Provider()
   .withDependencies({ prisma: prismaProvider })
   .withFactory(({ prisma }) => {
     const getUserById = async (id: number) => {
@@ -15,11 +19,10 @@ export const usersService = app
     return { getUserById }
   })
 
-export const userProvider = app
-  .provider()
-  .withDependencies({ usersService })
+export const userProvider = new Provider()
+  .withDependencies({ usersService, connection: CONNECTION_PROVIDER })
   .withScope(Scope.Call)
-  .withFactory(async ({ context: { connection }, usersService }) => {
+  .withFactory(async ({ connection, usersService }) => {
     if (!connection.data) return null
     const { id } = connection.data
     const user = await usersService.getUserById(id)
@@ -27,16 +30,14 @@ export const userProvider = app
     return user
   })
 
-export const authenticatedUserProvider = app
-  .provider()
+export const authenticatedUserProvider = new Provider()
   .withDependencies({ user: userProvider })
   .withFactory(async ({ user }) => {
     if (!user) throw new ApiError(ErrorCode.Forbidden)
     return user
   })
 
-export const adminUserProvider = app
-  .provider()
+export const adminUserProvider = new Provider()
   .withDependencies({ user: authenticatedUserProvider })
   .withFactory(async ({ user }) => {
     if (user.type !== 'ADMIN') throw new ApiError(ErrorCode.Forbidden)

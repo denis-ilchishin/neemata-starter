@@ -1,11 +1,10 @@
-import app from '#app'
+import { LOGGER_PROVIDER, Task } from '@neematajs/application'
 import { cryptoProvider } from 'application/common/providers/crypto.ts'
 
-export const testTask = app
-  .task()
-  .withDependencies({ crypto: cryptoProvider })
-  .withHandler(async ({ context, crypto }, interations: number) => {
-    context.logger.info(
+export const testTask = new Task()
+  .withDependencies({ crypto: cryptoProvider, logger: LOGGER_PROVIDER })
+  .withHandler(async ({ crypto, logger }, interations: number) => {
+    logger.info(
       'Some CPU-heavy task is being done here with %s iterations...',
       interations
     )

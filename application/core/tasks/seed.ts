@@ -1,14 +1,14 @@
-import app from 'application/application.ts'
+import { LOGGER_PROVIDER, Task } from '@neematajs/application'
 import { cryptoProvider } from 'application/common/providers/crypto.ts'
 import { prismaProvider } from 'application/common/providers/prisma.ts'
 
-export default app
-  .task()
+export default new Task()
   .withDependencies({
     db: prismaProvider,
     crypto: cryptoProvider,
+    logger: LOGGER_PROVIDER,
   })
-  .withHandler(async ({ context, db, crypto }) => {
+  .withHandler(async ({ logger, db, crypto }) => {
     const user = await db.user.create({
       data: {
         email: 'someEmail',
@@ -16,7 +16,5 @@ export default app
         type: 'ADMIN',
       },
     })
-    context.logger.info(
-      `Created [${user.type}] user with [${user.email}] email`
-    )
+    logger.info(`Created [${user.type}] user with [${user.email}] email`)
   })

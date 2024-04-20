@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import type { Events, Procedures } from '../../types/api.d.ts'
-import './styles.css'
+import type { Client } from '#app';
+import './styles.css';
 
-import { WebsocketsClient, type UpStream } from '@neemata/client-websockets'
-import { onBeforeUnmount, reactive, ref } from 'vue'
+import { WebsocketsClient, type UpStream } from '@neematajs/client-websockets';
+import { onBeforeUnmount, reactive, ref } from 'vue';
+
 
 const textDecoder = new TextDecoder()
 
 const port = +(import.meta as any).env.VITE_API_PORT || 42069
 const hostname = (import.meta as any).env.VITE_API_HOST || '127.0.0.1'
 
-const client = new WebsocketsClient<Procedures, Events>({
+const client = new WebsocketsClient<Client['procedures'], Client['events']>({
   host: hostname + ':' + port,
   debug: true,
 })
@@ -19,13 +20,14 @@ client.connect()
 
 onBeforeUnmount(() => client.disconnect())
 
+const fileInputRef = ref<HTMLInputElement>()
 const streamRef = ref<UpStream>()
 const isStarted = ref(false)
 const isPaused = ref(true)
 const total = ref()
 const done = ref()
 const percent = ref()
-const isFinished = ref(false)
+const isFinished = ref<string>()
 const messageText = ref('')
 const messages = ref<string[]>([])
 const joined = ref(false)
@@ -43,27 +45,33 @@ const toMB = (bytes) => (bytes / 1000 ** 2).toFixed(2) + 'MB'
 const upload = async () => {
   if (streamRef.value) {
     const stream = streamRef.value
+    isStarted.value = false
+    stream.on('start', () => (isPaused.value = false))
     stream.on('pause', () => (isPaused.value = true))
     stream.on('resume', () => (isPaused.value = false))
-    stream.on('', () => (isPaused.value = false))
     stream.on('progress', (sent) => {
       done.value = toMB(sent)
       percent.value = ((sent / stream.metadata.size) * 100).toFixed(2) + '%'
     })
     stream.once('end', () => {
+      console.log('end')
       done.value = toMB(stream.metadata.size)
       percent.value = '100%'
+      streamRef.value = undefined
+      fileInputRef.value = undefined
     })
     const data = { file: stream }
-    client.once('example/uploadFinish', (data) => (isFinished.value = true))
-    await client.rpc('example/v1/upload', data)
+    client.once('example/finish', (data) => {
+      isFinished.value = data
+    })
+    await client.rpc('example/upload', data)
   }
 }
 
 const createStream = async (event) => {
   isStarted.value = false
   isPaused.value = true
-  isFinished.value = false
+  isFinished.value = undefined
   streamRef.value = await client.createStream(event.target.files[0])
   streamRef.value.once('start', () => (isStarted.value = true))
   total.value = toMB(streamRef.value.metadata.size)
@@ -71,13 +79,13 @@ const createStream = async (event) => {
 }
 
 const simpleRpc = async () => {
-  const res = await client.rpc('example/v1/simple').catch((err) => err.message)
+  const res = await client.rpc('example/simple').catch((err) => err.message)
   alert(res)
 }
 
 const complexRpc = async () => {
   const res = await client
-    .rpc('example/v1/complex', {
+    .rpc('example/complex', {
       input1: 'input1',
       input2: 'input1',
     })
@@ -87,14 +95,14 @@ const complexRpc = async () => {
 }
 
 const taskRpc = async () => {
-  const res = await client.rpc('example/v1/task').catch((err) => err.message)
+  const res = await client.rpc('example/task').catch((err) => err.message)
   alert(res)
 }
 
 const streamJsonRpc = async () => {
   jsonStream.payload = undefined
   jsonStream.chunks = []
-  const { payload, stream } = await client.rpc('example/v1/stream-json')
+  const { payload, stream } = await client.rpc('example/streamJson')
   jsonStream.payload = payload
   try {
     for await (const chunk of stream) {
@@ -108,7 +116,7 @@ const streamJsonRpc = async () => {
 const streamBinaryRpc = async () => {
   binaryStream.payload = undefined
   binaryStream.chunks = []
-  const { payload, stream } = await client.rpc('example/v1/stream-binary')
+  const { payload, stream } = await client.rpc('example/streamBinary')
   binaryStream.payload = payload
   try {
     for await (const chunk of stream) {
@@ -120,7 +128,7 @@ const streamBinaryRpc = async () => {
 }
 
 const join = async () => {
-  const sub = await client.rpc('chat-example/v1/join', { chatId: 1 })
+  const sub = await client.rpc('chatExample/join', { chatId: 1 })
   sub.on('data', ({ message }) => {
     messages.value.push(message)
   })
@@ -131,11 +139,11 @@ const join = async () => {
 }
 
 const leave = async () => {
-  await client.rpc('chat-example/v1/leave', { chatId: 1 })
+  await client.rpc('chatExample/leave', { chatId: 1 })
 }
 
 const send = async () => {
-  await client.rpc('chat-example/v1/message', {
+  await client.rpc('chatExample/message', {
     chatId: 1,
     message: messageText.value,
   })
@@ -147,20 +155,28 @@ const send = async () => {
   <div class="grid grid-cols-2 gap-8">
     <div class="bg-slate-700 p-2">
       <div class="flex flex-wrap gap-4 items-center">
-        <input class="file-input" type="file" multiple @change="createStream" />
+        <input
+          class="file-input"
+          type="file"
+          multiple
+          @change="createStream"
+          ref="fileInputRef"
+        />
         <button class="btn" @click="upload" :disabled="!streamRef">Send</button>
       </div>
       <template v-if="isStarted">
         <button
+          v-if="isStarted && !isFinished"
           class="btn"
-          :disabled="isPaused || isFinished"
+          :disabled="isPaused"
           @click="() => streamRef?.pause()"
         >
           Pause
         </button>
         <button
+          v-if="isStarted && !isFinished"
           class="btn"
-          :disabled="!isPaused || isFinished"
+          :disabled="!isPaused"
           @click="() => streamRef?.resume()"
         >
           Resume
@@ -170,7 +186,7 @@ const send = async () => {
           <div>Progress: {{ percent }}</div>
           <div>Total: {{ total }}</div>
           <div>Done: {{ done }}</div>
-          <div v-if="isFinished">Yay! It's finished</div>
+          <div v-if="isFinished">{{ isFinished }}</div>
         </div>
       </template>
     </div>

@@ -1,5 +1,5 @@
-import { publicProcedure } from '#procedures'
-import { BinaryStreamResponse } from '@neemata/application'
+import { publicProcedure } from '#common/procedure.ts'
+import { BinaryStreamResponse } from '@neematajs/application'
 
 export default publicProcedure.withHandler(() => {
   const response = new BinaryStreamResponse('plain/text')
