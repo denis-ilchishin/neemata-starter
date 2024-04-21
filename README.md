@@ -1,5 +1,7 @@
 # Neemata quick example
 
+[Main repo](https://github.com/denis-ilchishin/neemata)
+
 ### Guide
 
 ```shell
