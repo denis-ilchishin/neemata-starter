@@ -21,10 +21,13 @@ export default defaultProcedure
   .withHandler(async ({ call }, data) => {
     // call another procedure
     const nestedResult = await call(simpleProcedure)
-    return nestedResult
+    return `Result from nested call "example/simple": ${nestedResult}`
   })
   .withOutput(
-    z.string().transform((val) => ({
-      transformed: val,
-    }))
+    z
+      .string()
+      .transform(
+        (val) =>
+          `This value is transformed through "example/complex" procedure's output serializer: ${val}`
+      )
   )

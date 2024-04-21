@@ -89,7 +89,6 @@ const complexRpc = async () => {
       input1: 'input1',
       input2: 'input1',
     })
-    .then(JSON.stringify)
     .catch((err) => err.message)
   alert(res)
 }

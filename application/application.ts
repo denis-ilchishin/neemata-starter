@@ -26,7 +26,7 @@ const {
   tasksRunner,
 } = injectWorkerOptions()
 
-const [port = 42069] = workerOptions ?? []
+const [port] = workerOptions ?? []
 
 const options: ApplicationOptions = {
   type,
